@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch
-from transformers.modeling_bert import BertIntermediate, BertOutput, BertAttention, BertLayerNorm, BertSelfAttention
+from transformers.models.bert.modeling_bert import BertIntermediate, BertOutput, BertAttention, BertLayerNorm, BertSelfAttention
 
 
 class SetDecoder(nn.Module):

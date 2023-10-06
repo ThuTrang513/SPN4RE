@@ -1,4 +1,6 @@
 import argparse, os, torch
+from gettext import install
+import pipes
 import random
 import numpy as np
 from utils.data import build_data
@@ -43,16 +45,16 @@ if __name__ == '__main__':
     # data_arg.add_argument('--valid_file', type=str, default="./data/NYT/exact_data/valid.json")
     # data_arg.add_argument('--test_file', type=str, default="./data/NYT/exact_data/test.json")
     
-    # data_arg.add_argument('--dataset_name', type=str, default="NYT-partial")
-    # data_arg.add_argument('--train_file', type=str, default="./data/NYT/casrel_data/new_train.json")
-    # data_arg.add_argument('--valid_file', type=str, default="./data/NYT/casrel_data/new_valid.json")
-    # data_arg.add_argument('--test_file', type=str, default="./data/NYT/casrel_data/new_test.json")
+    data_arg.add_argument('--dataset_name', type=str, default="NYT-partial")
+    data_arg.add_argument('--train_file', type=str, default="./data/NYT/casrel_data/new_train.json")
+    data_arg.add_argument('--valid_file', type=str, default="./data/NYT/casrel_data/new_valid.json")
+    data_arg.add_argument('--test_file', type=str, default="./data/NYT/casrel_data/new_test.json")
     
     
-    data_arg.add_argument('--dataset_name', type=str, default="WebNLG")
-    data_arg.add_argument('--train_file', type=str, default="./data/WebNLG/clean_WebNLG/new_train.json")
-    data_arg.add_argument('--valid_file', type=str, default="./data/WebNLG/clean_WebNLG/new_valid.json")
-    data_arg.add_argument('--test_file', type=str, default="./data/WebNLG/clean_WebNLG/new_test.json")
+    # data_arg.add_argument('--dataset_name', type=str, default="WebNLG")
+    # data_arg.add_argument('--train_file', type=str, default="./data/WebNLG/clean_WebNLG/new_train.json")
+    # data_arg.add_argument('--valid_file', type=str, default="./data/WebNLG/clean_WebNLG/new_valid.json")
+    # data_arg.add_argument('--test_file', type=str, default="./data/WebNLG/clean_WebNLG/new_test.json")
 
     data_arg.add_argument('--generated_data_directory', type=str, default="./data/generated_data/")
     data_arg.add_argument('--generated_param_directory', type=str, default="./data/generated_data/model_param/")
@@ -95,6 +97,7 @@ if __name__ == '__main__':
         print(arg, ":",  getattr(args, arg))
     set_seed(args.random_seed)
     data = build_data(args)
+    print(data[0])
     model = SetPred4RE(args, data.relational_alphabet.size())
     trainer = Trainer(model, data, args)
     trainer.train_model()
