@@ -1,7 +1,21 @@
 import torch.nn as nn
 import torch
-from transformers.models.bert.modeling_bert import BertIntermediate, BertOutput, BertAttention, BertLayerNorm, BertSelfAttention
+from transformers.models.bert.modeling_bert import BertIntermediate, BertOutput, BertAttention, BertSelfAttention
 
+
+class LayerNorm(nn.Module):
+    "Tạo 1 lớp layernorm"
+
+    def __init__(self, features, eps=1e-6):
+        super(LayerNorm, self).__init__()
+        self.a_2 = nn.Parameter(torch.ones(features))
+        self.b_2 = nn.Parameter(torch.zeros(features))
+        self.eps = eps
+
+    def forward(self, x):
+        mean = x.mean(-1, keepdim=True)
+        std = x.std(-1, keepdim=True)
+        return self.a_2 * (x - mean) / (std + self.eps) + self.b_2
 
 class SetDecoder(nn.Module):
     def __init__(self, config, num_generated_triples, num_layers, num_classes, return_intermediate=False):
@@ -9,7 +23,7 @@ class SetDecoder(nn.Module):
         self.return_intermediate = return_intermediate
         self.num_generated_triples = num_generated_triples
         self.layers = nn.ModuleList([DecoderLayer(config) for _ in range(num_layers)])
-        self.LayerNorm = BertLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
+        self.LayerNorm = LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.query_embed = nn.Embedding(num_generated_triples, config.hidden_size)
         self.decoder2class = nn.Linear(config.hidden_size, num_classes + 1)
